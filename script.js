@@ -1,34 +1,44 @@
 /**
  * Created by aaronsawyer on 4/30/15.
  */
-var cityData = null;
-var cityHtml = null;
+
+var firstCity = null;
 var numCities = 0;
 var cityName, cityPop, cityArea, cityDensity;
 
-$(document).ready(function(){
-    $("#get-city-btn").on("click", function(){
-        if(numCities == 0) {
-            $.get('cities.html', function (data) {
-                $("#cityList").append(data);
-            });
-        } else if(numCities == 4) {
-            numCities = 0;
-            $("#cityListed").empty();
-        }
 
-        $.get('data.json', function(data) {
-            cityData = data;
-            cityName = cityData.cities[0].name;
-            cityPop = cityData.cities[0].population;
-            cityArea = cityData.cities[0].landArea;
-            cityDensity = cityData.cities[0].density;
-            $(".citiesListed").append("<div class='oneCity'><p>Name:</p></div>");
-
-            numCities++;
-        });
-
-
+$(document).ready(function () {
+    $.get('cities.html', function (data) {
+        $("#cityList").append(data);
+    });
+    $.get('data.json', function (data) {
+        console.log(".get data function is running");
+        cityData = data;
     });
 
+    $("#get-city-btn").on("click", function() {
+        if (numCities == 5) {
+            numCities = 0;
+            $(".citiesListed").empty();
+        } else {
+            addCity();
+        }
+    });
+
+    $("#cityList").on("click", ".button-remove", function() {
+        console.log("this button works");
+        $(".citiesListed").empty();
+        numCities = 0;
+    });
+
+    function addCity() {
+        cityName = cityData.cities[numCities].name;
+        cityPop = cityData.cities[numCities].population;
+        cityArea = cityData.cities[numCities].landArea;
+        cityDensity = cityData.cities[numCities].density;
+        console.log(cityName, cityPop, cityArea, cityDensity);
+        $('.citiesListed').append("<div class='oneCity'><p>Name: " + cityName + "</p><p>Population: " + cityPop +
+        "</p><p>Land Area: " + cityArea + "</p><p>Density: " + cityDensity + "</p></div>");
+        numCities++;
+    }
 });
